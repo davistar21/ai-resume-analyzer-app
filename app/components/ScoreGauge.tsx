@@ -38,7 +38,10 @@ const ScoreGauge = ({ score = 75 }: { score: number }) => {
             strokeLinecap="round"
           />
 
-          {/* Foreground arc with rounded ends */}
+          {/* Foreground arc with rounded ends
+M20,80 A40,40 0 0,1 80,80
+          
+          */}
           <path
             ref={pathRef}
             d="M10,50 A40,40 0 0,1 90,50"

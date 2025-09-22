@@ -82,11 +82,11 @@ form {
     @apply flex flex-col items-center gap-8 max-w-4xl text-center;
   }
   .resumes-section {
-    @apply flex flex-wrap max-lg:flex-col gap-2 items-start self-center w-full max-w-[1850px];
+    @apply flex flex-col md:flex-row gap-12 flex-wrap items-center justify-center;
   }
 
   .resume-card {
-    @apply flex flex-col gap-8 h-[560px] w-full lg:w-[450px] xl:w-[430px] bg-white rounded-2xl p-4;
+    @apply flex flex-col gap-8 h-[560px] w-full min-w-[430px] bg-white rounded-2xl p-4;
   }
 
   .resume-card-header {

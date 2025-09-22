@@ -1,10 +1,25 @@
 import { Link } from "react-router";
+import { ScoreCircle } from "../components/ScoreCircle";
+import { usePuterStore } from "~/lib/puter";
+import { useEffect, useState } from "react";
 
 const ResumeCard = ({
   resume: { id, companyName, jobTitle, imagePath, feedback },
 }: {
   resume: Resume;
 }) => {
+  const { fs } = usePuterStore();
+  const [resumeUrl, setResumeUrl] = useState("");
+
+  useEffect(() => {
+    async function loadResume() {
+      const blob = await fs.read(imagePath);
+      if (!blob) return;
+      let url = URL.createObjectURL(blob);
+      setResumeUrl(url);
+    }
+    loadResume();
+  }, [imagePath]);
   return (
     <Link
       to={`resume/${id}`}
@@ -12,10 +27,17 @@ const ResumeCard = ({
     >
       <div className="resume-card-header flex justify-between p-3 items-center mb-3">
         <div className="flex flex-col gap-2">
-          <h2 className="break-words !text-black font-bold">{companyName}</h2>
-          <h3 className="text-lg break-words text-gray-500 text-ellipsis">
-            {jobTitle}
-          </h3>
+          {companyName && (
+            <h2 className="break-words !text-black font-bold">{companyName}</h2>
+          )}
+          {jobTitle && (
+            <h3 className="text-lg break-words text-gray-500 text-ellipsis">
+              {jobTitle}
+            </h3>
+          )}
+          {!companyName && !jobTitle && (
+            <h2 className="!text-black font-bold">Resume</h2>
+          )}
         </div>
         <div className="flex-shrink-0 ">
           <ScoreCircle
@@ -25,19 +47,20 @@ const ResumeCard = ({
           />
         </div>
       </div>
-      <div className="w-full overflow-hidden rounded-md">
-        <img
-          src={imagePath}
-          alt=""
-          className="h-full w-full object-cover gradient-border"
-        />
-      </div>
+      {resumeUrl && (
+        <div className="w-full overflow-hidden rounded-md">
+          <img
+            src={resumeUrl}
+            alt="resume"
+            className="h-[350px] max-sm:h-[200px] w-full object-cover gradient-border"
+          />
+        </div>
+      )}
     </Link>
   );
 };
 
 export default ResumeCard;
-import { ScoreCircle } from "../components/ScoreCircle";
 
 // function Dashboard() {
 //   return (
