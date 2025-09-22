@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useId } from "react";
 
 interface ScoreCircleProps {
   value: number;
@@ -7,24 +7,24 @@ interface ScoreCircleProps {
   strokeWidth?: number;
   gradient?: [string, string]; // e.g. ["#34d399", "#3b82f6"]
   backgroundColor?: string;
+  className?: string;
 }
 
-export const ScoreCircle: React.FC<ScoreCircleProps> = (
-  {
-    value,
-    max = 100,
-    size = 100,
-    strokeWidth = 10,
-    gradient = ["#FF97AD", "#5171FF"], // default: green to blue
-    backgroundColor = "#e5e7eb", // gray-200
-  },
-  className: string = ""
-) => {
+export const ScoreCircle: React.FC<ScoreCircleProps> = ({
+  value,
+  max = 100,
+  size = 100,
+  strokeWidth = 10,
+  gradient = ["#FF97AD", "#5171FF"], // default: green to blue
+  backgroundColor = "#e5e7eb", // gray-200
+  className = "",
+}) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const clampedValue = Math.min(Math.max(value, 0), max);
   const offset = circumference - (clampedValue / max) * circumference;
-  const gradientId = `gradient-${Math.random().toString(36).substring(2, 9)}`; // unique per instance
+  const id = useId();
+  const gradientId = `gradient-${id}`; // unique per instance
 
   return (
     <div

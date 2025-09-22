@@ -1,15 +1,12 @@
 import { Link } from "react-router";
 
 const ResumeCard = ({
-  key,
   resume: { id, companyName, jobTitle, imagePath, feedback },
 }: {
-  key: string;
   resume: Resume;
 }) => {
   return (
     <Link
-      key={key}
       to={`resume/${id}`}
       className="resume-card animate-in fade-in slide-in-from-bottom-4 duration-700"
     >
