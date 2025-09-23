@@ -26,71 +26,19 @@ const Resume = () => {
     }
   }, [isLoading]);
   const [localLoading, setLocalLoading] = useState(false);
-  /*async function handleDelete() {
-    try {
-      setLocalLoading(true);
-      // const files = (await fs.readDir("./")) as FSItem[];
-      // const filteredFiles = files.filter(
-      //   (file) =>
-      //     file.path === resumeRawData?.imagePath ||
-      //     file.path === resumeRawData?.imagePath
-      // );
-      // console.log("actual path", resumeRawData?.resumePath);
-      // files.forEach((file) => {
-      //   console.log(file.path);
-      // });
-
-      // console.log("all files", files);
-      // console.log("filteredFiles", filteredFiles);
-      await fs.delete(resumeRawData?.imagePath || "");
-      await fs.delete(resumeRawData?.resumePath || "");
-      // await kv.delete(`resume:${id}`);
-      // if (!deleted) console.error("Failed to delete resume key");
-      await kv.delete(`resume:${id}`);
-      // await new Promise((r) => setTimeout(r, 500)); // 500ms delay
-      const r = await kv.list("resume:*", true);
-      console.log("resumesleft", r);
-      // console.log(g);
-      // await kv.delete("resume:67a0a09f-c386-40f1-b7fa-fbb56d7351db");
-    } catch (err: any) {
-      console.error("Error could not delete resume");
-      console.error(err);
-    } finally {
-      setLocalLoading(false);
-      // navigate("/");
-      const r = (await kv.list("resume:*", true)) as KVItem[];
-      // console.log("resumesleft", r);
-    }
-  }*/
   async function handleDelete() {
     try {
       setLocalLoading(true);
-
-      // Wait for both file deletions to finish
-      await Promise.all([
-        fs.delete(resumeRawData?.imagePath || ""),
-        fs.delete(resumeRawData?.resumePath || ""),
-      ]);
-
-      // Delete the resume key in KV
-      const deleted = await kv.delete(`resume:${id}`);
-      if (!deleted) {
-        console.error("Failed to delete resume key");
-      }
-
-      // Optional small delay for consistency (like in wipeApp)
-      await new Promise((resolve) => setTimeout(resolve, 300));
-
-      // Refresh the resumes list after deletion
-      const resumesLeft = (await kv.list("resume:*", true)) as KVItem[];
-      console.log("resumes left after deletion:", resumesLeft);
-
-      // TODO: if you have a state holding resumes, update it here!
+      await fs.delete(resumeRawData?.imagePath || "");
+      await fs.delete(resumeRawData?.resumePath || "");
+      await kv.delete(`resume:${id}`);
+      const r = await kv.list("resume:*", true);
     } catch (err: any) {
       console.error("Error could not delete resume");
       console.error(err);
     } finally {
       setLocalLoading(false);
+      navigate("/");
     }
   }
 
@@ -115,7 +63,6 @@ const Resume = () => {
       setFeedback(data.feedback);
 
       // kv.delete(``)
-      console.log("data", data);
       setResumeRawData(data);
     };
     loadResume();
@@ -136,12 +83,12 @@ const Resume = () => {
             Back to Homepage
           </span>
         </Link>
-        {/* <button
+        <button
           className="text-white bg-red-700 font-semibold rounded-full px-4 py-2 cursor-pointer w-fit translate-0  hover:-translate-y-0.5 hover:bg-red-600 transition-all duration-300 ease-in-out"
           onClick={handleDelete}
         >
           Delete Resume
-        </button> */}
+        </button>
       </nav>
       <div className="flex flex-row w-full max-lg:flex-col-reverse">
         <section className="feedback-section bg-[url('/images/bg-small.svg')] bg-cover sticky min-h-[100vh] top-0 ">

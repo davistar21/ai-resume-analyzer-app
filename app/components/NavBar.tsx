@@ -2,6 +2,39 @@ import { Link, NavLink } from "react-router";
 import { usePuterStore } from "~/lib/puter";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"; // Heroicons for the hamburger icon
 import React, { useState } from "react";
+const HamburgerIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-6 w-6 text-gray-800 "
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth={2}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M4 6h16M4 12h16M4 18h16"
+    />
+  </svg>
+);
+const UserIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-10 w-10 text-gray-800"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth={2}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M5.121 17.804A9 9 0 0112 15a9 9 0 016.879 2.804M15 10a3 3 0 11-6 0 3 3 0 016 0z"
+    />
+  </svg>
+);
+
 const NavBar = () => {
   const { auth } = usePuterStore();
   const signOut = async () => {
@@ -23,27 +56,22 @@ const NavBar = () => {
       </Link>
       <div className="md:hidden">
         <button className="text-4xl cursor-pointer" onClick={toggleSidebar}>
-          {isOpen ? <span>&times;</span> : <span>&darr;</span>}
+          {isOpen ? (
+            <span>&times;</span>
+          ) : (
+            <span>
+              <HamburgerIcon />
+            </span>
+          )}
         </button>
       </div>
-      {
-        <div
-          className={`md:hidden flex items-center gap-4 w-[200px] absolute flex-col top-15 bg-gray-50 rounded-2xl p-2 right-2 opacity-0 transition-all duration-300 -translate-y-2 ${isOpen ? "opacity-100 translate-y-0" : "opacity-0"}`}
-        >
-          <NavLink to="/upload" className={`primary-button text-center`}>
-            Upload Resume
-          </NavLink>
-          <NavLink
-            to="/"
-            className="hover:underline cursor-pointer"
-            onClick={signOut}
-          >
-            {auth.isAuthenticated ? "Logout" : "Sign in"}
-          </NavLink>
+      <div
+        className={` flex flex-col absolute top-15 right-2 items-center gap-4 min-w-[200px] bg-gray-50 rounded-2xl p-2 md:static md:flex-row md:bg-transparent md:flex md:opacity-100 opacity-0 transition-all duration-300 -translate-y-2 ${isOpen ? "opacity-100 translate-y-0" : "opacity-0 md:opacity-100 md:translate-0"}`}
+      >
+        <div className="text-sm text-gray-500 md:hidden underline">
+          @{auth.user?.username}
         </div>
-      }
-      <div className="hidden md:flex-row md:bg-transparent md:flex items-center gap-4">
-        <NavLink to="/upload" className={`primary-button w-fit`}>
+        <NavLink to="/upload" className={`primary-button text-center`}>
           Upload Resume
         </NavLink>
         <NavLink
@@ -53,8 +81,8 @@ const NavBar = () => {
         >
           {auth.isAuthenticated ? "Logout" : "Sign in"}
         </NavLink>
+        {/* <UserIcon /> */}
       </div>
-      {/* <Sidebar /> */}
     </nav>
   );
 };

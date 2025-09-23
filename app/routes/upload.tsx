@@ -1,6 +1,7 @@
 import { prepareInstructions, AIResponseFormat } from "constants/index";
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router";
+import Error from "~/components/Error";
 import FileUploader from "~/components/FileUploader";
 import NavBar from "~/components/NavBar";
 import { convertPdfToImage } from "~/lib/pdf2img";
@@ -11,6 +12,7 @@ const upload = () => {
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
   const [statusText, setStatusText] = useState("");
+  const [err, setErr] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const handleFileSelect = (file: File | null) => {
     setFile(file);
@@ -26,45 +28,50 @@ const upload = () => {
     jobDescription: string;
     file: File;
   }) => {
-    setIsProcessing(true);
-    setStatusText("Uploading the file...");
-    const uploadedFile = await fs.upload([file]);
-    if (!uploadedFile) return setStatusText("Error: failed to upload file");
-    setStatusText("Converting to image...");
-    const imageFile = await convertPdfToImage(file);
-    console.log("imageFile", imageFile);
-    if (!imageFile.file)
-      return setStatusText("Error: Failed to convert PDF to image");
-    setStatusText("Uploading the image...");
-    const uploadedImage = await fs.upload([imageFile.file]);
-    if (!uploadedImage) return setStatusText("Error: failed to upload image");
-    setStatusText("Preparing data...");
-    const uuid = crypto.randomUUID();
-    const data = {
-      id: uuid,
-      resumePath: uploadedFile.path,
-      imagePath: uploadedImage.path,
-      companyName,
-      jobTitle,
-      jobDescription,
-      feedback: "",
-    };
-    await kv.set(`resume:${uuid}`, JSON.stringify(data));
-    const feedback = await ai.feedback(
-      uploadedFile.path,
-      prepareInstructions({ jobTitle, jobDescription, AIResponseFormat })
-    );
-    if (!feedback) return setStatusText("Error: failed to analyze resume");
-    const feedbackText =
-      typeof feedback.message.content === "string"
-        ? feedback.message.content
-        : feedback.message.content[0].text;
-    data.feedback = JSON.parse(feedbackText);
-    await kv.set(`resume:${uuid}`, JSON.stringify(data));
-    setStatusText("Analysis complete, redirecting...");
-    console.log(data);
-    navigate(`/resume/${uuid}`);
+    try {
+      setIsProcessing(true);
+      setStatusText("Uploading the file...");
+      const uploadedFile = await fs.upload([file]);
+      if (!uploadedFile) return setStatusText("Error: failed to upload file");
+
+      setStatusText("Converting to image...");
+      const imageFile = await convertPdfToImage(file);
+      if (!imageFile.file)
+        return setStatusText("Error: Failed to convert PDF to image");
+
+      setStatusText("Uploading the image...");
+      const uploadedImage = await fs.upload([imageFile.file]);
+      if (!uploadedImage) return setStatusText("Error: failed to upload image");
+
+      setStatusText("Preparing data...");
+      const uuid = crypto.randomUUID();
+      const feedback = await ai.feedback(
+        uploadedFile.path,
+        prepareInstructions({ jobTitle, jobDescription, AIResponseFormat })
+      );
+      if (!feedback) return setStatusText("Error: failed to analyze resume");
+      const feedbackText =
+        typeof feedback.message.content === "string"
+          ? feedback.message.content
+          : feedback.message.content[0].text;
+      const data = {
+        id: uuid,
+        resumePath: uploadedFile.path,
+        imagePath: uploadedImage.path,
+        companyName,
+        jobTitle,
+        jobDescription,
+        feedback: JSON.parse(feedbackText),
+      };
+
+      await kv.set(`resume:${uuid}`, JSON.stringify(data));
+      setStatusText("Analysis complete, redirecting...");
+      navigate(`/resume/${uuid}`);
+    } catch (err: any) {
+      setErr(err.error.message);
+    }
   };
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget.closest("form");
@@ -77,6 +84,13 @@ const upload = () => {
     if (!file) return;
     handleAnalyze({ companyName, jobTitle, jobDescription, file });
   };
+  if (err)
+    return (
+      <div className="relative min-h-screen bg-[url('/images/bg-main.svg')] bg-cover bg-no-repeat bg-center">
+        <NavBar />
+        <Error message={err} />
+      </div>
+    );
   return (
     <div className="relative min-h-screen bg-[url('/images/bg-main.svg')] bg-cover bg-no-repeat bg-center">
       <NavBar />

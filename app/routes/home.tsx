@@ -26,8 +26,9 @@ export default function Home() {
       const parsedResumes = resumes?.map(
         (resume) => JSON.parse(resume.value) as Resume
       );
-      parsedResumes.filter((resume) => resume.imagePath && resume.resumePath);
-      console.log("parsedResumes", parsedResumes);
+      parsedResumes.filter(
+        (resume) => resume.imagePath && resume.resumePath && resume.feedback
+      );
       setResumes(parsedResumes);
       setLoadingResumes(false);
     }
@@ -59,7 +60,6 @@ export default function Home() {
         {!loadingResumes && resumes.length > 0 && (
           <div className="resumes-section">
             {resumes.map((resume) => {
-              console.log(auth.user?.username);
               return (
                 <motion.div
                   key={resume.id}

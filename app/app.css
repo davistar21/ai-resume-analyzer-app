@@ -52,8 +52,13 @@ form {
 
 @layer components {
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#AB8C95] via-[#000000] to-[#8E97C5];
+    @apply bg-gradient-to-r from-[#AB8C95] via-[#000000] to-[#8E97C5];
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
   }
+
   .gradient-border {
     @apply bg-gradient-to-b from-light-blue-100 to-light-blue-200 p-2 rounded-2xl;
   }
@@ -122,7 +127,11 @@ form {
 }
 
 @utility text-gradient {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-[#AB8C95] via-[#000000] to-[#8E97C5];
+  @apply bg-gradient-to-r from-[#AB8C95] via-[#000000] to-[#8E97C5];
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 @utility gradient-hover {
