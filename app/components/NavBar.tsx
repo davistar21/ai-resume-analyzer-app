@@ -46,9 +46,13 @@ const NavBar = () => {
         <NavLink to="/upload" className={`primary-button w-fit`}>
           Upload Resume
         </NavLink>
-        <button className="hover:underline" onClick={signOut}>
-          Logout
-        </button>
+        <NavLink
+          to="/"
+          className="hover:underline cursor-pointer"
+          onClick={signOut}
+        >
+          {auth.isAuthenticated ? "Logout" : "Sign in"}
+        </NavLink>
       </div>
       {/* <Sidebar /> */}
     </nav>
