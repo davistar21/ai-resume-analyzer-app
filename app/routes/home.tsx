@@ -58,6 +58,7 @@ export default function Home() {
         {!loadingResumes && resumes.length > 0 && (
           <div className="resumes-section">
             {resumes.map((resume) => {
+              console.log(auth.user?.username);
               return (
                 <motion.div
                   key={resume.id}
@@ -73,7 +74,7 @@ export default function Home() {
             })}
           </div>
         )}
-        {!loadingResumes && !(resumes?.length === 0) && (
+        {!loadingResumes && resumes?.length === 0 && (
           <div className="flex flex-col items-center justify-center mt-10 gap-4">
             <Link
               to="/upload"
