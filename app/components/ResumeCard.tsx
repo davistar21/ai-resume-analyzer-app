@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import { ScoreCircle } from "../components/ScoreCircle";
 import { usePuterStore } from "~/lib/puter";
 import { useEffect, useState } from "react";
-
+import { motion } from "framer-motion";
 const ResumeCard = ({
   resume: { id, companyName, jobTitle, imagePath, feedback },
 }: {
@@ -47,13 +47,40 @@ const ResumeCard = ({
           />
         </div>
       </div>
-      {resumeUrl && (
-        <div className="w-full overflow-hidden rounded-md">
+      {resumeUrl ? (
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          viewport={{ once: true, amount: 0.3 }}
+          className="w-full overflow-hidden rounded-md"
+        >
           <img
             src={resumeUrl}
             alt="resume"
             className="h-[350px] max-sm:h-[200px] w-full object-cover gradient-border"
           />
+        </motion.div>
+      ) : (
+        <div className="flex flex-col gap-2">
+          <div className="w-full rounded-md flex flex-col gap-2 overflow-hidden animate-pulse ">
+            <div className="h-10 rounded-md bg-gray-200"></div>
+            <div className="h-4 rounded-md bg-gray-200"></div>
+            <div className="h-2 rounded-md bg-gray-200"></div>
+            <div className="h-2 rounded-md bg-gray-200"></div>
+          </div>
+          <div className="w-full rounded-md flex flex-col gap-2 overflow-hidden animate-pulse ">
+            <div className="h-10 rounded-md bg-gray-200"></div>
+            <div className="h-4 rounded-md bg-gray-200"></div>
+            <div className="h-2 rounded-md bg-gray-200"></div>
+            <div className="h-2 rounded-md bg-gray-200"></div>
+          </div>
+          <div className="w-full rounded-md flex flex-col gap-2 overflow-hidden animate-pulse ">
+            <div className="h-10 rounded-md bg-gray-200"></div>
+            <div className="h-4 rounded-md bg-gray-200"></div>
+            <div className="h-2 rounded-md bg-gray-200"></div>
+            <div className="h-2 rounded-md bg-gray-200"></div>
+          </div>
         </div>
       )}
     </Link>
