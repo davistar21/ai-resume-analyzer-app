@@ -33,9 +33,13 @@ const NavBar = () => {
           <NavLink to="/upload" className={`primary-button text-center`}>
             Upload Resume
           </NavLink>
-          <button className="hover:underline cursor-pointer" onClick={signOut}>
+          <NavLink
+            to="/"
+            className="hover:underline cursor-pointer"
+            onClick={signOut}
+          >
             {auth.isAuthenticated ? "Logout" : "Sign in"}
-          </button>
+          </NavLink>
         </div>
       }
       <div className="hidden md:flex-row md:bg-transparent md:flex items-center gap-4">
