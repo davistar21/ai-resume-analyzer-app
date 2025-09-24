@@ -26,7 +26,7 @@ const ResumeCard = ({
       className="resume-card animate-in fade-in slide-in-from-bottom-4 duration-700"
     >
       <div className="resume-card-header flex justify-between p-3 items-center mb-3">
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col items-start gap-2">
           {companyName && (
             <h2 className="break-words !text-black font-bold">{companyName}</h2>
           )}
