@@ -25,7 +25,7 @@ const auth = () => {
         <section className="flex flex-col gap-8 bg-white rounded-2xl p-10">
           <div className="flex flex-col items-center gap-2 text-center">
             <h1>Welcome</h1>
-            <h2>Log into your continue your job journey.</h2>
+            <h2>Log in to continue your job journey.</h2>
           </div>
           <div>
             {isLoading ? (
@@ -35,10 +35,9 @@ const auth = () => {
             ) : (
               <>
                 {auth.isAuthenticated ? (
-                  <button
-                    className="auth-button"
-                    onClick={auth.signOut}
-                  ></button>
+                  <button className="auth-button" onClick={auth.signOut}>
+                    Log out
+                  </button>
                 ) : (
                   <button className="auth-button" onClick={auth.signIn}>
                     <p>Log in</p>
